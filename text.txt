@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FireGuard AI System</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #1a1a1a; color: white; padding: 20px; }
+        input, button { padding: 10px; margin: 10px; font-size: 16px; }
+        button { background-color: #ff4500; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #d13600; }
+        #output { margin-top: 20px; padding: 15px; background: #333; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+    <h1>🔥 FireGuard AI System 🔥</h1>
+    <p>Enter text to test FireGuard’s filtering, SparkGuard’s learning, and VoidGuard’s security.</p>
+
+    <input type="text" id="userInput" placeholder="Type something...">
+    <button onclick="runFireGuard()">Check Content</button>
+    <button onclick="runSparkGuard()">Learn & Retrieve</button>
+    <button onclick="runVoidGuard()">Check Security</button>
+
+    <div id="output">Results will appear here.</div>
+
+    <script>
+        class FireGuard {
+            constructor() {
+                this.blockedTerms = new Set([
+                    "nudes", "NSFW", "xxx", "porn", "bbl", "bbb", ".com", ".net",
+                    "wildcard domains", "bypass spellings", "inappropriate images"
+                ]);
+                this.expandedFilters = this.generateExpandedFilters();
+            }
+
+            generateExpandedFilters() {
+                let variations = new Set();
+                this.blockedTerms.forEach(term => {
+                    variations.add(term);
+                    variations.add(term.replace("o", "0")); // Example: "porn" → "p0rn"
+                    variations.add(term.replace("s", "$")); // Example: "NSFW" → "N$FW"
+                });
+                return variations;
+            }
+
+            filterContent(text) {
+                let lowerText = text.toLowerCase();
+                for (let term of this.expandedFilters) {
+                    if (lowerText.includes(term)) {
+                        return "🚫 FireGuard Detected an Inappropriate Term!";
+                    }
+                }
+                return "✅ Safe Content!";
+            }
+        }
+
+        class SparkGuard {
+            constructor() {
+                this.knowledgeBase = {};
+            }
+
+            learn(key, value) {
+                this.knowledgeBase[key] = value;
+            }
+
+            retrieve(key) {
+                return this.knowledgeBase[key] || "❓ Knowledge not found.";
+            }
+        }
+
+        class VoidGuard {
+            constructor() {
+                this.securityMeasures = ["Encryption", "Firewall", "AI Behavior Analysis"];
+            }
+
+            checkSecurity() {
+                return `🛡️ VoidGuard Active: ${this.securityMeasures.join(", ")}`;
+            }
+        }
+
+        const fireguard = new FireGuard();
+        const sparkguard = new SparkGuard();
+        const voidguard = new VoidGuard();
+
+        function runFireGuard() {
+            let userInput = document.getElementById("userInput").value;
+            document.getElementById("output").innerHTML = fireguard.filterContent(userInput);
+        }
+
+        function runSparkGuard() {
+            let key = prompt("Enter a key to learn/retrieve:");
+            if (!key) return;
+            let value = sparkguard.retrieve(key);
+            if (value === "❓ Knowledge not found.") {
+                let newValue = prompt("Knowledge not found! Enter a value to learn:");
+                if (newValue) {
+                    sparkguard.learn(key, newValue);
+                    document.getElementById("output").innerHTML = `📚 Learned: ${key} = ${newValue}`;
+                }
+            } else {
+                document.getElementById("output").innerHTML = `📖 Retrieved: ${key} = ${value}`;
+            }
+        }
+
+        function runVoidGuard() {
+            document.getElementById("output").innerHTML = voidguard.checkSecurity();
+        }
+    </script>
+
+</body>
+</html>
